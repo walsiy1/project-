@@ -1,0 +1,263 @@
+1-	Db.sandy.find()
+Python:
+from pymongo import MongoClient
+
+client = MongoClient("mongodb://host:port/")
+database = client["dby"]
+collection = database["sandy"]
+
+
+query = {}
+
+cursor = collection.find(query)
+try:
+    for doc in cursor:
+        print doc["_id"]
+finally:
+    cursor.close()
+ ___________________________________
+ 2-db.sandy.find({
+    "geo.type": "Point",
+    "geo.coordinates": 36.85450544 
+})
+
+
+from pymongo import MongoClient
+
+client = MongoClient("mongodb://host:port/")
+database = client["dby"]
+collection = database["sandy"]
+
+
+query = {}
+query["geo.type"] = u"Point"
+query["geo.coordinates"] = 36.85450544
+
+cursor = collection.find(query)
+try:
+    for doc in cursor:
+        print doc["_id"]
+finally:
+cursor.close()
+_____________________________________________
+3- db.sandy.find( { geo :
+{ $geoWithin : { $centerSphere: [ [ -4.02398223 , 50.39133907] , 10 / 3963.2] } } } )
+from pymongo import MongoClient
+
+client = MongoClient("mongodb://host:port/")
+database = client["dby"]
+collection = database["sandy"]
+
+
+query = {}
+query["geo"] = {
+    u"$geoWithin": {
+        u"$centerSphere": [
+            [
+                -4.02398223,
+                50.39133907
+            ],
+            0.0025232135647961246
+        ]
+    }
+}
+
+
+cursor = collection.find(query)
+try:
+    for doc in cursor:
+        print doc["_id"]
+finally:
+    cursor.close()
+
+_________________________________________________
+db.sandy.find(
+   {
+     geo: {
+       $geoWithin: {
+          $geometry: {
+             type : "Polygon" ,
+             coordinates: [ [ [ 0, 0 ], [ 3, 6 ], [ 6, 1 ], [ 0, 0 ] ] ]
+          }
+       }
+     }
+   }
+)
+
+query = {}
+query["geo"] = {
+    u"$geoWithin": {
+        u"$geometry": {
+            u"type": u"Polygon",
+            u"coordinates": [
+                [
+                    [
+                        0.0,
+                        0.0
+                    ],
+                    [
+                        3.0,
+                        6.0
+                    ],
+                    [
+                        6.0,
+                        1.0
+                    ],
+                    [
+                        0.0,
+                        0.0
+                    ]
+                ]
+            ]
+        }
+    }
+}
+
+
+cursor = collection.find(query)
+try:
+    for doc in cursor:
+        print doc["_id"]
+finally:
+    cursor.close()
+	_____________________________________________
+		db.sandy.find({"geo.coordinates" : {$gt : -93}, "geo.coordinates" : {$lt : 180}})
+	
+	query = {}
+query["geo.coordinates"] = {
+    u"$lt": 180.0
+}
+
+
+cursor = collection.find(query)
+try:
+    for doc in cursor:
+        print doc["_id"]
+finally:
+    cursor.close()
+
+______________________________________________________
+geo:{
+     $geoIntersects: {
+        $geometry: {
+           type: "Point" ,
+           coordinates:[
+                        -3.20406942, 
+                        51.59246224
+                    ]
+        }
+     
+ }
+  }
+}
+)
+query = {}
+query["geo"] = {
+    u"$geoIntersects": {
+        u"$geometry": {
+            u"type": u"Point",
+            u"coordinates": [
+                -3.20406942,
+                51.59246224
+            ]
+        }
+    }
+}
+
+
+cursor = collection.find(query)
+try:
+    for doc in cursor:
+        print doc["_id"]
+finally:
+    cursor.close()
+_____________________________________________
+db.sandy.find({geo:
+{$geoWithin : 
+ { $centerSphere: [ [ -4.02398223 , 50.39133907] , 5 /6,378.1] } } }, { name : 1 , type : 1, country_code : 2, _id: 1 });
+query = {}
+query["geo"] = {
+    u"$geoWithin": {
+        u"$centerSphere": [
+            [
+                -4.02398223,
+                50.39133907
+            ],
+            0.8333333333333334,
+            378.1
+        ]
+    }
+}
+
+
+projection = {}
+projection["name"] = 1.0
+projection["type"] = 1.0
+projection["country_code"] = 2.0
+projection["_id"] = 1.0
+
+cursor = collection.find(query, projection = projection)
+try:
+    for doc in cursor:
+        print doc["_id"]
+finally:
+    cursor.close()
+________________________________________________________________
+db.sandy.find( {
+   geo: { $geoWithin: { $box:  [ [ 20, 20], [ 90, 90 ] ] } }
+} )
+query = {}
+query["geo"] = {
+    u"$geoWithin": {
+        u"$box": [
+            [
+                20.0,
+                20.0
+            ],
+            [
+                90.0,
+                90.0
+            ]
+        ]
+    }
+}
+
+
+cursor = collection.find(query)
+try:
+    for doc in cursor:
+        print doc["_id"]
+finally:
+    cursor.close()
+_____________________________________________
+db.sandy.find({$and:[{"actor.displayName":/^Mike/i},
+{"actor.friendsCount":{$gte:100}}]}) 
+:: from bson.regex import Regex
+from pymongo import MongoClient
+
+client = MongoClient("mongodb://host:port/")
+database = client["dby"]
+collection = database["sandy"]
+
+
+query = {}
+query["$and"] = [
+    {
+        u"actor.displayName": Regex(u"^Mike", "i")
+    },
+    {
+        u"actor.friendsCount": {
+            u"$gte": 100.0
+        }
+    }
+]
+
+
+cursor = collection.find(query)
+try:
+    for doc in cursor:
+        print doc["_id"]
+finally:
+    cursor.close()
+_____________________________________________
+
